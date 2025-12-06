@@ -145,9 +145,25 @@ function App() {
     <div className="flex flex-col min-h-screen">
       {/* Topbar */}
       <header className="h-16 bg-[#1e1e1e] text-[#E0E0E0] flex items-center px-5">
-        <h1 className="text-xl font-bold">LivePreview <span className="text-[#FF6B00] text-sm">Beta</span></h1>
-        {/* Placeholder for topbar actions */}
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          LivePreview
+          <span className="text-sm text-gray-500 flex items-center gap-1">
+            Open Source 
+            <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#FF6B00] hover:underline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
+            </a>
+          </span>
+        </h1>
+        
         <div className="ml-auto flex items-center space-x-4">
+          {/* MicroTools Button */}
+          <button 
+            className="text-gray-400 border border-gray-600 px-3 py-1 rounded flex items-center gap-1"
+            onClick={() => window.open('https://tools.adamsiwek.pl', '_blank')}
+          >
+            <span className="text-sm">✨</span> <span className="font-medium">Part of MicroTools</span>
+          </button>
+          
           {/* Buy me a coffee button */}
           <button 
             className="text-gray-400 border border-gray-600 px-3 py-1 rounded"
