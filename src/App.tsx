@@ -175,11 +175,11 @@ function App() {
     <div className="flex flex-col min-h-screen">
       {/* Topbar */}
       <header className="h-16 bg-[#1e1e1e] text-[#E0E0E0] flex items-center px-5">
-        <h1 className="text-xl font-bold flex items-center gap-2">
+        <h1 className="text-xl font-bold flex flex-row items-baseline gap-3">
           LivePreview
-          <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 flex items-center gap-1 hover:text-[#FF6B00] hover:underline decoration-[#FF6B00] underline-offset-2 transition-colors">
+          <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 flex items-center gap-1 hover:text-[#FF6B00] hover:underline decoration-[#FF6B00] underline-offset-2 transition-colors translate-y-[1px]">
             Open Source 
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
           </a>
         </h1>
         
@@ -208,18 +208,26 @@ function App() {
       <PanelGroup direction="horizontal" className="flex-grow">
         <Panel defaultSize={35} minSize={20}>
           {/* Editor Panel */}
-          <Editor
-            height="100%"
-            language="html"
-            theme="vs-dark"
-            defaultValue={code}
-            options={{
-              minimap: { enabled: false },
-            }}
-            onChange={handleEditorChange}
-          />
+          <div className="flex flex-col h-full">
+            {/* Editor Toolbar to match Preview Toolbar height for alignment */}
+            <div className="h-12 bg-[#1e1e1e] border-b border-[#333] flex items-center px-4 text-gray-400 text-sm font-medium select-none">
+              <span>&lt;/&gt; Code Input</span>
+            </div>
+            <div className="flex-grow">
+              <Editor
+                height="100%"
+                language="html"
+                theme="vs-dark"
+                defaultValue={code}
+                options={{
+                  minimap: { enabled: false },
+                }}
+                onChange={handleEditorChange}
+              />
+            </div>
+          </div>
         </Panel>
-        <PanelResizeHandle className="w-2 bg-[#333333] hover:bg-[#FF6B00] transition-colors duration-200 cursor-ew-resize" />
+        <PanelResizeHandle className="w-2 bg-[#333333] hover:bg-[#FF6B00] transition-colors duration-200 cursor-ew-resize mt-12" />
         <Panel defaultSize={65} minSize={30}>
           {/* Preview Panel */}
           <div className="flex flex-col h-full w-full bg-gray-700"> {/* Outer container for toolbar and iframe */}
