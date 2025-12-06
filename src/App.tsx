@@ -11,13 +11,37 @@ function App() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Generated Code</title>
   <style>
-    body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f0f0f0; }
-    h1 { color: #333; }
+    body { 
+      font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      background-color: #111; 
+      color: #e0e0e0;
+      text-align: center;
+    }
+    h1 { 
+      color: #fff; 
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    p {
+      color: #888;
+      font-size: 1.1rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    span.highlight {
+      color: #FF6B00;
+    }
   </style>
 </head>
 <body>
-  <h1>Hello from LivePreview!</h1>
-  <p>Your AI-generated code will appear here.</p>
+  <h1>Hello from <span class="highlight">LivePreview!</span></h1>
+  <p>Paste your AI-generated HTML, CSS, or JS here to test it instantly.</p>
 </body>
 </html>`);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -35,7 +59,13 @@ function App() {
   <title>Live Preview</title>
   <style>
     /* Default CSS Reset / Basic Styles */
-    body { margin: 0; font-family: sans-serif; }
+    body { 
+      margin: 0; 
+      font-family: 'Inter', system-ui, sans-serif; 
+      background-color: #111; 
+      color: #e0e0e0; 
+      min-height: 100vh;
+    }
   </style>
 </head>
 <body>
@@ -114,7 +144,7 @@ function App() {
   }, []);
 
   const iframeWrapperClasses = clsx(
-    'w-full h-full bg-white', // Base styles
+    'w-full h-full bg-gray-800', // Base styles - Changed from bg-white to bg-gray-800 for dark mode compatibility
     {
       'flex justify-center items-center overflow-auto p-4': previewMode === 'mobile', // Mobile specific: centering + padding
       'relative overflow-hidden': previewMode === 'desktop', // Desktop specific: relative for absolute child
@@ -147,12 +177,10 @@ function App() {
       <header className="h-16 bg-[#1e1e1e] text-[#E0E0E0] flex items-center px-5">
         <h1 className="text-xl font-bold flex items-center gap-2">
           LivePreview
-          <span className="text-sm text-gray-500 flex items-center gap-1">
+          <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 flex items-center gap-1 hover:text-[#FF6B00] hover:underline decoration-[#FF6B00] underline-offset-2 transition-colors">
             Open Source 
-            <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-[#FF6B00] hover:underline">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
-            </a>
-          </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
+          </a>
         </h1>
         
         <div className="ml-auto flex items-center space-x-4">
@@ -196,7 +224,7 @@ function App() {
           {/* Preview Panel */}
           <div className="flex flex-col h-full w-full bg-gray-700"> {/* Outer container for toolbar and iframe */}
             {/* Toolbar */}
-            <div className="h-10 bg-[#1e1e1e] flex items-center justify-center space-x-4 text-gray-300 relative">
+            <div className="h-12 bg-[#1e1e1e] flex items-center justify-center space-x-4 text-gray-300 relative">
               <button
                 className={clsx(
                   "px-3 py-1 rounded text-sm",
