@@ -35,27 +35,34 @@ h1 {
 }
 
 #root {
-  width: 100%; /* Ensure #root takes full width */
-  height: 100vh; /* Ensure #root takes full height, matching min-h-screen in App.tsx */
+  width: 100%;
+  height: 100vh;
+  isolation: isolate;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* Reset buttons essentially */
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 @media (prefers-color-scheme: light) {

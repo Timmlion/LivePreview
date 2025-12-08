@@ -41,7 +41,7 @@ function App() {
 </head>
 <body>
   <h1>Hello from <span class="highlight">LivePreview!</span></h1>
-  <p>Paste your AI-generated HTML, CSS, or JS here to test it instantly.</p>
+  <p>Paste your HTML, CSS, or JS here to test it instantly.</p>
 </body>
 </html>`);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -122,13 +122,13 @@ function App() {
     // 2. Show Coffee Modal (if not suppressed)
     const isSuppressed = localStorage.getItem('livepreview_suppress_coffee_modal');
     if (!isSuppressed) {
-        setShowCoffeeModal(true);
+      setShowCoffeeModal(true);
     }
   }, [code]);
 
   const closeCoffeeModal = () => {
     if (dontShowAgain) {
-        localStorage.setItem('livepreview_suppress_coffee_modal', 'true');
+      localStorage.setItem('livepreview_suppress_coffee_modal', 'true');
     }
     setShowCoffeeModal(false);
   };
@@ -172,48 +172,96 @@ function App() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Topbar */}
-      <header className="h-16 bg-[#1e1e1e] text-[#E0E0E0] flex items-center px-5">
-        <h1 className="text-xl font-bold flex flex-row items-baseline gap-3">
-          LivePreview
-          <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 flex items-center gap-1 hover:text-[#FF6B00] hover:underline decoration-[#FF6B00] underline-offset-2 transition-colors translate-y-[1px]">
-            Open Source 
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-5-2"/></svg>
+    <div className="flex flex-col min-h-screen bg-[#111] text-[#E0E0E0] font-sans">
+      {/* Global Header - Unified Controls */}
+      <header className="h-14 border-b border-[#333] flex items-center px-4 bg-[#111] shrink-0 gap-4">
+        {/* Brand */}
+        <div className="flex items-center gap-2 mr-4">
+          <span className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#FF6B00] to-[#FF9E00]">LivePreview</span>
+          <span className="text-xs text-gray-600 px-1.5 py-0.5 rounded border border-gray-800">beta</span>
+        </div>
+
+        {/* Separator */}
+        <div className="w-px h-6 bg-[#333]"></div>
+
+        {/* View Controls (Desktop/Mobile) */}
+        <div className="flex items-center bg-[#1a1a1a] rounded-lg p-1 border border-[#333]">
+          <button
+            onClick={handleDesktopClick}
+            className={clsx(
+              "px-3 py-1.5 text-sm rounded-md transition-all flex items-center gap-2",
+              previewMode === 'desktop' ? "bg-[#333] text-white shadow-sm" : "text-gray-500 hover:text-gray-300"
+            )}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="3" rx="2" /><line x1="8" x2="16" y1="21" y2="21" /><line x1="12" x2="12" y1="17" y2="21" /></svg>
+            Desktop
+          </button>
+          <button
+            onClick={handleMobileClick}
+            className={clsx(
+              "px-3 py-1.5 text-sm rounded-md transition-all flex items-center gap-2",
+              previewMode === 'mobile' ? "bg-[#333] text-white shadow-sm" : "text-gray-500 hover:text-gray-300"
+            )}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /><path d="M12 18h.01" /></svg>
+            Mobile
+          </button>
+        </div>
+
+        {/* Zoom Control - Only visible on Desktop */}
+        {previewMode === 'desktop' && (
+          <div className="flex items-center gap-3 ml-2">
+            <span className="text-xs text-gray-500 uppercase tracking-wider font-semibold">Zoom</span>
+            <input
+              type="range"
+              min="0.25"
+              max="1"
+              step="0.01"
+              value={scale}
+              onChange={(e) => setScale(parseFloat(e.target.value))}
+              className="w-24 h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-[#FF6B00]" // Simple custom styling
+              title={`Zoom: ${Math.round(scale * 100)}%`}
+            />
+            <span className="text-xs text-gray-400 w-8 text-right font-mono">{Math.round(scale * 100)}%</span>
+          </div>
+        )}
+
+        {/* Spacer */}
+        <div className="flex-grow"></div>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-3">
+          <a href="https://github.com/Timmlion/LivePreview" target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-white transition-colors" title="View Source">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.44-.78-3.46 0 0-1.09 0-3 1.5a12.1 12.1 0 0 0-6 0c-1.92-1.5-3-1.5-3-1.5-.5.92-.81 2.12-.78 3.46 0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-5-2" /></svg>
           </a>
-        </h1>
-        
-        <div className="ml-auto flex items-center space-x-4">
-          {/* MicroTools Button */}
-          <button 
-            className="text-gray-400 border border-gray-600 px-3 py-1 rounded flex items-center gap-1"
-            onClick={() => window.open('https://tools.adamsiwek.pl', '_blank')}
+          <button
+            className="p-2 text-gray-500 hover:text-[#FFDD00] transition-colors"
+            onClick={() => setShowCoffeeModal(true)}
+            title="Buy me a coffee"
           >
-            <span className="text-sm">✨</span> <span className="font-medium">Part of MicroTools</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /><line x1="6" x2="6" y1="1" y2="4" /><line x1="10" x2="10" y1="1" y2="4" /><line x1="14" x2="14" y1="1" y2="4" /></svg>
           </button>
-          
-          {/* Buy me a coffee button */}
-          <button 
-            className="text-gray-400 border border-gray-600 px-3 py-1 rounded"
-            onClick={() => window.open('https://ko-fi.com/adamsiwek', '_blank')}
+
+          <button
+            className="bg-[#FF6B00] hover:bg-[#e66000] text-white px-4 py-1.5 rounded-md text-sm font-medium transition-colors flex items-center gap-2"
+            onClick={handleDownload}
           >
-            ☕ Buy me a coffee
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
+            Download
           </button>
-          {/* Download button */}
-          <button className="bg-[#FF6B00] text-white px-3 py-1 rounded" onClick={handleDownload}>Download .html</button>
         </div>
       </header>
 
       {/* Workspace */}
       <PanelGroup direction="horizontal" className="flex-grow">
-        <Panel defaultSize={35} minSize={20}>
+        <Panel defaultSize={40} minSize={20} className="bg-[#1e1e1e]">
           {/* Editor Panel */}
-          <div className="flex flex-col h-full">
-            {/* Editor Toolbar to match Preview Toolbar height for alignment */}
-            <div className="h-12 bg-[#1e1e1e] border-b border-[#333] flex items-center px-4 text-gray-400 text-sm font-medium select-none">
-              <span>&lt;/&gt; Code Input</span>
+          <div className="flex flex-col h-full border-r border-[#333]">
+            {/* Minimal Label if needed, or just pure editor space */}
+            <div className="h-6 bg-[#1a1a1a] border-b border-[#2a2a2a] flex items-center px-3 justify-between">
+              <span className="text-[10px] uppercase font-bold text-gray-600 tracking-wider">HTML / CSS / JS</span>
             </div>
-            <div className="flex-grow">
+            <div className="flex-grow relative">
               <Editor
                 height="100%"
                 language="html"
@@ -221,55 +269,26 @@ function App() {
                 defaultValue={code}
                 options={{
                   minimap: { enabled: false },
+                  padding: { top: 16 },
+                  fontSize: 14,
+                  fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                  lineNumbers: 'on',
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
                 }}
                 onChange={handleEditorChange}
               />
             </div>
           </div>
         </Panel>
-        <PanelResizeHandle className="w-2 bg-[#333333] hover:bg-[#FF6B00] transition-colors duration-200 cursor-ew-resize mt-12" />
-        <Panel defaultSize={65} minSize={30}>
+
+        <PanelResizeHandle className="w-[1px] bg-[#333] hover:bg-[#FF6B00] transition-colors duration-200" />
+
+        <Panel defaultSize={60} minSize={30}>
           {/* Preview Panel */}
-          <div className="flex flex-col h-full w-full bg-gray-700"> {/* Outer container for toolbar and iframe */}
-            {/* Toolbar */}
-            <div className="h-12 bg-[#1e1e1e] flex items-center justify-center space-x-4 text-gray-300 relative">
-              <button
-                className={clsx(
-                  "px-3 py-1 rounded text-sm",
-                  previewMode === 'desktop' ? "bg-[#FF6B00] text-white" : "hover:bg-gray-600"
-                )}
-                onClick={handleDesktopClick}
-              >
-                🖥️ Desktop
-              </button>
-              <button
-                className={clsx(
-                  "px-3 py-1 rounded text-sm",
-                  previewMode === 'mobile' ? "bg-[#FF6B00] text-white" : "hover:bg-gray-600"
-                )}
-                onClick={handleMobileClick}
-              >
-                📱 Mobile
-              </button>
-              
-              {/* Zoom Control - Only visible on Desktop */}
-              {previewMode === 'desktop' && (
-                <div className="flex items-center gap-2 border-l border-gray-600 pl-4 ml-2 absolute right-4">
-                  <span className="text-xs text-gray-400 w-16 text-right">{Math.round(scale * 100)}%</span>
-                  <input
-                      type="range"
-                      min="0.25"
-                      max="1"
-                      step="0.01"
-                      value={scale}
-                      onChange={(e) => setScale(parseFloat(e.target.value))}
-                      className="w-24 accent-[#FF6B00] cursor-pointer"
-                      title="Zoom Preview"
-                  />
-                </div>
-              )}
-            </div>
-            {/* Iframe Area */}
+          <div className="flex flex-col h-full w-full bg-[#0d0d0d] relative"> {/* Dark implementation preview background */}
+
+            {/* Iframe Container */}
             <div className={iframeWrapperClasses}>
               <iframe
                 ref={iframeRef}
@@ -279,55 +298,56 @@ function App() {
                 title="Live Preview"
               />
             </div>
+            {/* Helper Text for "Empty" state could go here if code is empty */}
           </div>
         </Panel>
       </PanelGroup>
 
-      {/* Coffee Modal */}
+      {/* Coffee Modal - Kept the same structural logic, just slight overlay update */}
       {showCoffeeModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm p-4">
-            <div className="bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
-                {/* Banner */}
-                <div className="h-32 bg-gradient-to-br from-[#FF6B00] to-[#FF9E00] flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
-                    <span className="text-6xl drop-shadow-lg transform hover:scale-110 transition-transform duration-300 cursor-default">☕</span>
-                </div>
-                {/* Content */}
-                <div className="p-6 text-center">
-                    <h2 className="text-2xl font-bold text-white mb-2">Enjoying LivePreview?</h2>
-                    <p className="text-gray-300 mb-8 leading-relaxed">
-                        If this tool saved you some time, please consider buying me a coffee to support future updates!
-                    </p>
-                    
-                    {/* Action Buttons */}
-                    <div className="flex flex-col gap-3">
-                        <button 
-                            onClick={() => window.open('https://ko-fi.com/adamsiwek', '_blank')}
-                            className="w-full bg-[#FF6B00] hover:bg-[#e66000] text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:-translate-y-0.5 shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2"
-                        >
-                            <span>☕</span> Buy me a coffee
-                        </button>
-                        <button 
-                            onClick={closeCoffeeModal}
-                            className="w-full bg-transparent border border-gray-600 text-gray-400 hover:text-white hover:border-gray-500 hover:bg-gray-800/50 font-medium py-2 px-4 rounded-lg transition-colors"
-                        >
-                            Maybe later
-                        </button>
-                    </div>
-
-                    {/* Checkbox */}
-                    <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500 hover:text-gray-400 transition-colors">
-                        <input 
-                            type="checkbox" 
-                            id="dont-show"
-                            checked={dontShowAgain}
-                            onChange={(e) => setDontShowAgain(e.target.checked)}
-                            className="rounded bg-gray-800 border-gray-600 text-[#FF6B00] focus:ring-[#FF6B00] cursor-pointer"
-                        />
-                        <label htmlFor="dont-show" className="cursor-pointer select-none">Don't show this again</label>
-                    </div>
-                </div>
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-[#1e1e1e] border border-[#333] rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+            {/* Banner */}
+            <div className="h-28 bg-[#2a2a2a] flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FF6B00]/20 to-transparent"></div>
+              <span className="text-5xl drop-shadow-md cursor-default">☕</span>
             </div>
+            {/* Content */}
+            <div className="p-6 text-center">
+              <h2 className="text-xl font-bold text-white mb-2">Buy me a coffee?</h2>
+              <p className="text-gray-400 mb-6 text-sm leading-relaxed">
+                If LivePreview helped you build something cool, consider supporting the project!
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => window.open('https://ko-fi.com/adamsiwek', '_blank')}
+                  className="w-full bg-[#FF6B00] hover:bg-[#e66000] text-white font-bold py-2.5 px-4 rounded-lg transition-all shadow-lg hover:shadow-orange-500/20 flex items-center justify-center gap-2"
+                >
+                  <span>Yes, I'd love to!</span>
+                </button>
+                <button
+                  onClick={closeCoffeeModal}
+                  className="w-full text-gray-500 hover:text-white text-sm py-2 px-4 transition-colors"
+                >
+                  No thanks, maybe later
+                </button>
+              </div>
+
+              {/* Checkbox */}
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-600">
+                <input
+                  type="checkbox"
+                  id="dont-show"
+                  checked={dontShowAgain}
+                  onChange={(e) => setDontShowAgain(e.target.checked)}
+                  className="rounded bg-gray-800 border-gray-600 text-[#FF6B00] focus:ring-[#FF6B00] cursor-pointer"
+                />
+                <label htmlFor="dont-show" className="cursor-pointer select-none">Don't show for a while</label>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
