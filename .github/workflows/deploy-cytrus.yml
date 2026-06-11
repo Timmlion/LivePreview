@@ -1,0 +1,25 @@
+name: Deploy to Cytrus (ftp.cytr.us)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+      - name: Deploy via FTP
+        run: |
+          lftp -c "
+            open -u \${{ secrets.CYTRUS_FTP_USER }},\${{ secrets.CYTRUS_FTP_PASS }} ftp.cytr.us
+            mirror -R -e dist/ /livepreview/
+          "
