@@ -1,4 +1,4 @@
-name: Deploy to Cytrus (ftp.cytr.us)
+name: Deploy to Cytrus
 on:
   push:
     branches: [main]
@@ -20,6 +20,6 @@ jobs:
       - name: Deploy via FTP
         run: |
           lftp -c "
-            open -u ${{ secrets.CYTRUS_FTP_USER }},${{ secrets.CYTRUS_FTP_PASS }} ftp.cytr.us
+            open -u ${{ secrets.CYTRUS_FTP_USER }},${{ secrets.CYTRUS_FTP_PASS }} ${{ secrets.CYTRUS_FTP_HOST }}
             mirror -R -e dist/ /livepreview/
           "
