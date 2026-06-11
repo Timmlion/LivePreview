@@ -20,6 +20,6 @@ jobs:
       - name: Deploy via FTP
         run: |
           lftp -c "
-            open -u \${{ secrets.CYTRUS_FTP_USER }},\${{ secrets.CYTRUS_FTP_PASS }} ftp.cytr.us
+            open -u ${{ secrets.CYTRUS_FTP_USER }},${{ secrets.CYTRUS_FTP_PASS }} ftp.cytr.us
             mirror -R -e dist/ /livepreview/
           "
